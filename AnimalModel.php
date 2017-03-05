@@ -1,9 +1,10 @@
 <?php
-require "Animal.php";
 class AnimalModel
 {
-
     public $connection;
+    public $id;
+    public $title;
+    public $type;
 
     public function __construct()
     {
@@ -13,32 +14,38 @@ class AnimalModel
 
     }
 
-    public function save()
-    {
-        if (isset($this->id))
-        {
-            $this->_update();
-        } else {
-            $this->_insert();
-        }
-    }
-
-    private function _update()
+    public function update()
     {
         $stm = $this->connection->prepare("UPDATE animals SET title=:title, type=:type WHERE id=:id");
+        $stm->bindParam(':id', $this->id);
         $stm->bindParam(':title', $this->title);
         $stm->bindParam(':type', $this->type);
         $stm->execute();
+        return $stm;
     }
 
-    private function _insert()
+    public function insert()
     {
         $stm = $this->connection->prepare("INSERT INTO animals (title, type) VALUE  (:title, :type);");
         $stm->bindParam(':title', $this->title);
         $stm->bindParam(':type', $this->type);
         $stm->execute();
+        return $stm;
+    }
+
+    public function find()
+    {
+        $stm = $this->connection->prepare("SELECT * FROM animals WHERE id=:id;");
+        $stm->bindParam(':id', $this->id);
+        $stm->execute();
+        $result = $stm->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
     }
 }
 
 $model =  new AnimalModel();
-$model->save('af', 'as');
+$model->id=2;
+$model->title = 'horse';
+$model->type = 'Abstract horse';
+print_r($model->update());
+
