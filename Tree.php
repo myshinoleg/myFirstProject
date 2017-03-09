@@ -65,3 +65,20 @@ class BinaryTree
     }
 
 }
+
+$tree = new BinaryTree();
+$tree->insert(4);
+$tree->insert(2);
+$tree->insert(3);
+$tree->insert(8);
+$tree->insert(5);
+$tree->traverse();
+
+/**
+ * int(2)
+int(3)
+int(4)
+int(5)
+int(8)
+
+ */
